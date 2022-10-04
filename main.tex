@@ -1,0 +1,173 @@
+\documentclass[
+    % Uncomment the following for a more compact font size
+    % compact
+]{llresume}
+
+% Uncomment the following commands to change the document's colors
+% \definecolor{accentcolor}{HTML}{1E738D}
+% \definecolor{fillcolor}{HTML}{FDF6EC}
+% \definecolor{headingcolor}{HTML}{8F5224}
+
+% Define custom commands, if needed
+\renewcommand{\emph}[1]{{\bfseries\color{accentcolor}#1}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Personal information
+%
+% For contacts and other info, you can use \infoGeneric{<icon>}{<text>}[<link>]
+% to add a line of information, or one of the following shortcuts in the form
+% \info<Shortcut>{<test>}[<link>]:
+%
+% \infoEmail          \infoDate           \infoLinkedin       \infoBook
+% \infoPhone          \infoPlace          \infoGithub         \infoAuthor
+% \infoAddress        \infoLink           \infoInstagram      \infoTools
+% \infoBirthday       \infoHomepage       \infoFlickr
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% First name, last name, and optional pronouns
+\name{Clio}{Esker Gabbro}[they/them]
+
+% Profile photo
+\photo{photo.png}
+
+% Contacts and other info
+\personalinfo{
+    \infoBirthday{31/01/1970 (Earth, Solar System)}
+    \infoAddress{Mars, Solar System}
+    \infoEmail{ceskergabbro@globemail.com}[mailto:ceskergabbro@globemail.com]
+    \infoHomepage{ceskergabbro.com}[https://ceskergabbro.com]
+    \infoLinkedin{www.linkedin.com/in/ceskergabbro}[https://www.linkedin.com/in/ceskergabbro]
+    \infoGithub{github.com/ceskergabbro}[https://github.com/ceskergabbro]
+}
+
+% Tag line
+\tagline{
+    My name is Clio Esker Gabbro. I am a \emph{space explorer} with experience
+    on Mars. My current ambition is to conduct further research on
+    \emph{awareness during time loops}. Very importantly, I \emph{do not lie} on
+    r\'esum\'es. In my free time, I enjoy formulating \emph{jokes and puns} and
+    roasting \emph{vegan marshmallows}.
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Main pane
+%
+% Each section of the main pane is enclosed within an environment of the form
+% \begin{mainsection}{<section title>} ... \end{mainsection}
+%
+% Available commands:
+%
+% \entryJob{<title>}[<descr>]{<location>}{<date>}
+% \entryPub{<title>}[<descr>]{<authors>}{<journal/conference>}{<DOI/link>}
+% \entrySkills[<title>]{<list of skills>}
+% \entryTags[<title>]{<list of tags>}
+% \entryGeneric{<title>}[<descr>][<info>][<info>][<info>]
+%
+% Skill and tag commands:
+%
+% \skill{<name>}{<score>}
+% \simpleskill[<icon>]{<name>}
+% \boxedtag[<icon>]{<name>}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\makeheader
+
+\begin{mainpane}
+    \begin{mainsection}{Education}
+        \entryJob
+            {PhD Irrelevant Science of Jokes}
+            [Perfected the fine art of species-inclusive interplanetary
+            entertainment, a.k.a. PC jokes]
+            {Institute of PlutoTech (remote)}
+            {2013 -- 2017}
+        \entryJob
+            {MSc Cheap Space Entertainment}
+            [Learned how to make low-quality space movies, and how to sell them
+            as refined content]
+            {Lunar University of Technology}
+            {2010 -- 2012}
+    \end{mainsection}
+
+    \begin{mainsection}{Selected publications}
+        \entryPub
+            {Looking for Water on Mars}
+            {C. Esker Gabbro et al.}
+            {Journal of ambitious hobby projects (2012)}
+            {DOI: 12.3456/1234567.1234567}
+            [https://doi.org/12.3456/1234567.1234567]
+        \entryPub
+            {Life on Mars: All You Need Is a Twix}
+            {C. Esker Gabbro et al.}
+            {Conference on universal puns (2017)}
+            {DOI: 12.6543/7654321.7654321}
+            [https://doi.org/12.6543/7654321.7654321]
+    \end{mainsection}
+
+    \begin{mainsection}{Projects}
+        \entryGeneric
+            {This LaTeX r\'esum\'e}
+            [Great success in interstellar job applications]
+            [\infoHomepage
+                {ceskergabbro.com/llresume}
+                [https://ceskergabbro.com/llresume]]
+            [\infoGithub
+                {github.com/ceskergabbro/llresume}
+                [https://github.com/ceskergabbro/llresume]]
+        \entryGeneric
+            {The strange look of cats on Mars}
+            [A collection of the strangest photos of cats]
+            [\infoFlickr
+                {www.flickr.com/ceskergabbro/catsonmars}
+                [https://www.flickr.com/ceskergabbro/catsonmars]]
+    \end{mainsection}
+
+    \begin{mainsection}{Work experience}
+        \entryJob
+            {Mars explorer}
+            [Mostly playing with Mars rovers to search for the remains of an
+            ancient society]
+            {Mars (Solar System)}
+            {November 2017 -- present}
+        \entryJob
+            {Personal portable heater}
+            [Hired on demand by those who happened to feel cold during the
+            day and could use a hug too]
+            {All over Earth}
+            {June 2008 -- March 2010}
+    \end{mainsection}
+
+    \begin{mainsection}{Skills \& languages}
+        \entrySkills[Computer]{
+            \skill{Python++}{3}
+            \skill{DeRust}{2}
+            \skill{JavaSharp}{2}
+            \skill{Macrohard}{1}
+        }
+        \entrySkills[Other tools]{
+            \simpleskill{Mars rover}
+            \simpleskill{Asteroid gazer}
+            \simpleskill{Brain}
+            \simpleskill{Ballpoint pen}
+            \simpleskill{Signalscope}
+        }
+        \entrySkills[Languages]{
+            \skill{Earthian}{3}
+            \skill{Interstellar}{2}
+            \skill{Martian}{3}
+            \skill{Nolan}{1}
+        }
+    \end{mainsection}
+
+    \begin{mainsection}{Personal interests}
+        \entryTags{
+            \boxedtag{Writing quantum poems}
+            \boxedtag{Playing the flute}
+            \boxedtag{Collecting minerals}
+            \boxedtag{Building hammocks}
+        }
+    \end{mainsection}
+\end{mainpane}
+
+\end{document}
