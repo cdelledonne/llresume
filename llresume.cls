@@ -35,7 +35,7 @@
 \RequirePackage{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{hyperref}
-\RequirePackage{ifpdf}
+\RequirePackage{iftex}
 \RequirePackage[colaction]{multicol}
 \RequirePackage{setspace}
 \RequirePackage[most]{tcolorbox}
@@ -46,13 +46,10 @@
 % Must load after multicol and tikz
 \RequirePackage{multicolrule}
 
-\ifpdf
-% For encoding in pdfTeX
-\RequirePackage[utf8]{inputenc}
+\ifpdftex
+% For encoding in pdfLaTeX
 \RequirePackage[T1]{fontenc}
-\else
-% For encoding in XeTeX and LuaTeX
-\RequirePackage{fontspec}
+\RequirePackage[utf8]{inputenc}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -179,14 +176,14 @@
 
 \ifthenelse{\boolean{@classOptionCompact}}
     {
-        \setmainfont{Carlito}
-        \setstretch{0.9}
+        \RequirePackage[sfdefault,lf]{carlito}
         \def\iconsize{\scriptsize}
+        \setstretch{0.9}
     }
     {
-        \setmainfont[Scale=1.1]{Carlito}
-        \setstretch{1.0}
+        \RequirePackage[sfdefault,lf,scale=1.1]{carlito}
         \def\iconsize{\scriptsize}
+        \setstretch{1.0}
     }
 
 \definecolor{accentcolor}{HTML}{1E738D}

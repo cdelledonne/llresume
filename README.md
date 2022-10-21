@@ -6,11 +6,8 @@ using your favorite typesetting language.
 ## Usage
 
 You can edit and compile the résumé on Overleaf or clone this repository and
-compile it yourself. At the moment, only XeLaTeX is supported (support pdfLaTeX
-and LuaLaTeX is planned for the future).
-
-Look into [main.tex](./main.tex) for a comprehensive example and for how to use
-this class.
+compile it yourself. Look into [main.tex](./main.tex) for a comprehensive
+example and for how to use this class.
 
 ## Showcase
 
