@@ -436,21 +436,22 @@
 % Info shortcuts
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewDocumentCommand{\infoEmail}{m o}{\infoGeneric{\faEnvelope}{#1}[#2]}
-\NewDocumentCommand{\infoPhone}{m o}{\infoGeneric{\faPhone*}{#1}[#2]}
 \NewDocumentCommand{\infoAddress}{m o}{\infoGeneric{\faHome}{#1}[#2]}
-\NewDocumentCommand{\infoBirthday}{m o}{\infoGeneric{\faBirthdayCake}{#1}[#2]}
-\NewDocumentCommand{\infoDate}{m o}{\infoGeneric{\faCalendarDay}{#1}[#2]}
-\NewDocumentCommand{\infoPlace}{m o}{\infoGeneric{\faMapMarker*}{#1}[#2]}
-\NewDocumentCommand{\infoLink}{m o}{\infoGeneric{\faLink}{#1}[#2]}
-\NewDocumentCommand{\infoHomepage}{m o}{\infoGeneric{\faGlobe}{#1}[#2]}
-\NewDocumentCommand{\infoLinkedin}{m o}{\infoGeneric{\faLinkedin}{#1}[#2]}
-\NewDocumentCommand{\infoGithub}{m o}{\infoGeneric{\faGithub}{#1}[#2]}
-\NewDocumentCommand{\infoInstagram}{m o}{\infoGeneric{\faInstagram}{#1}[#2]}
-\NewDocumentCommand{\infoFlickr}{m o}{\infoGeneric{\faFlickr}{#1}[#2]}
-\NewDocumentCommand{\infoBook}{m o}{\infoGeneric{\faBook}{#1}[#2]}
 \NewDocumentCommand{\infoAuthor}{m o}{\infoGeneric{\faUser}{#1}[#2]}
+\NewDocumentCommand{\infoBirthday}{m o}{\infoGeneric{\faBirthdayCake}{#1}[#2]}
+\NewDocumentCommand{\infoBook}{m o}{\infoGeneric{\faBook}{#1}[#2]}
+\NewDocumentCommand{\infoDate}{m o}{\infoGeneric{\faCalendarDay}{#1}[#2]}
+\NewDocumentCommand{\infoEmail}{m o}{\infoGeneric{\faEnvelope}{#1}[#2]}
+\NewDocumentCommand{\infoFlickr}{m o}{\infoGeneric{\faFlickr}{#1}[#2]}
+\NewDocumentCommand{\infoGithub}{m o}{\infoGeneric{\faGithub}{#1}[#2]}
+\NewDocumentCommand{\infoHomepage}{m o}{\infoGeneric{\faGlobe}{#1}[#2]}
+\NewDocumentCommand{\infoInstagram}{m o}{\infoGeneric{\faInstagram}{#1}[#2]}
+\NewDocumentCommand{\infoLinkedin}{m o}{\infoGeneric{\faLinkedin}{#1}[#2]}
+\NewDocumentCommand{\infoLink}{m o}{\infoGeneric{\faLink}{#1}[#2]}
+\NewDocumentCommand{\infoPhone}{m o}{\infoGeneric{\faPhone*}{#1}[#2]}
+\NewDocumentCommand{\infoPlace}{m o}{\infoGeneric{\faMapMarker*}{#1}[#2]}
 \NewDocumentCommand{\infoTools}{m o}{\infoGeneric{\faTools}{#1}[#2]}
+\NewDocumentCommand{\infoYoutube}{m o}{\infoGeneric{\faYoutube}{#1}[#2]}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Required user definitions
