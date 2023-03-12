@@ -14,11 +14,11 @@
 % Class options and base class
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\RequirePackage{ifthen}
+\RequirePackage{etoolbox}
 
-\newboolean{@classOptionCompact}
-\setboolean{@classOptionCompact}{false}
-\DeclareOption{compact}{\setboolean{@classOptionCompact}{true}}
+\newbool{@llresume@opt@compact}
+\setbool{@llresume@opt@compact}{false}
+\DeclareOption{compact}{\setbool{@llresume@opt@compact}{true}}
 
 % Process class options
 \DeclareOption*{\PassOptionsToClass{\CurrentOption}{scrartcl}}
@@ -35,16 +35,17 @@
 \RequirePackage{geometry}
 \RequirePackage{graphicx}
 \RequirePackage{hyperref}
-\RequirePackage{iftex}
 \RequirePackage[colaction]{multicol}
 \RequirePackage{setspace}
-\RequirePackage[most]{tcolorbox}
+\RequirePackage{tcolorbox}
 \RequirePackage{tikz}
 \RequirePackage{xcolor}
 \RequirePackage{xparse}
 
 % Must load after multicol and tikz
 \RequirePackage{multicolrule}
+
+\tcbuselibrary{xparse}
 
 \ifpdftex
 % For encoding in pdfLaTeX
@@ -56,10 +57,8 @@
 % Dimensions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewDocumentCommand{\SetLengthIfCompact}{m m m}{
-    \ifthenelse{\boolean{@classOptionCompact}}
-        {\setlength{#1}{#2}}
-        {\setlength{#1}{#3}}
+\NewDocumentCommand{\@llresume@setlength}{m m m}{
+    \ifbool{@llresume@opt@compact}{\setlength{#1}{#2}}{\setlength{#1}{#3}}
 }
 
 % Page margins
@@ -74,7 +73,7 @@
 
 % Margin of layout panes
 \newlength{\panemargin}
-\SetLengthIfCompact{\panemargin}{0.5cm}{0.75cm}
+\@llresume@setlength{\panemargin}{0.5cm}{0.75cm}
 
 % Inward margin of layout column
 \newlength{\columnmargin}
@@ -90,15 +89,15 @@
 
 % Vertical margin before and after main pane's section component
 \newlength{\mainsectionmargin}
-\SetLengthIfCompact{\mainsectionmargin}{2.5ex}{3ex}
+\@llresume@setlength{\mainsectionmargin}{2.5ex}{3ex}
 
 % Top margin of main pane's entry component
 \newlength{\mainentrymargin}
-\SetLengthIfCompact{\mainentrymargin}{1.5ex}{2.5ex}
+\@llresume@setlength{\mainentrymargin}{1.5ex}{2.5ex}
 
 % Vertical margin between entry title and description and info
 \newlength{\mainentrycomponentsmargin}
-\SetLengthIfCompact{\mainentrycomponentsmargin}{0ex}{0.5ex}
+\@llresume@setlength{\mainentrycomponentsmargin}{0ex}{0.5ex}
 
 % Vertical margin between name of skill groups and skills
 \newlength{\skillgroupmargin}
@@ -154,7 +153,6 @@
     right=\rmargin,
     top=\tmargin,
     bottom=\bmargin,
-    % TODO: check if the following three are needed
     bindingoffset=0em,
     nomarginpar,
     noheadfoot,
@@ -167,24 +165,22 @@
 }
 
 % Convenience boolean
-\newboolean{@rightalign}
-\setboolean{@rightalign}{false}
+\newbool{@llresume@rightalign}
+\setbool{@llresume@rightalign}{false}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Font and colors
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\ifthenelse{\boolean{@classOptionCompact}}
-    {
-        \RequirePackage[sfdefault,lf]{carlito}
-        \def\iconsize{\scriptsize}
-        \setstretch{0.9}
-    }
-    {
-        \RequirePackage[sfdefault,lf,scale=1.1]{carlito}
-        \def\iconsize{\scriptsize}
-        \setstretch{1.0}
-    }
+\ifbool{@llresume@opt@compact}{
+    \RequirePackage[sfdefault,lf]{carlito}
+    \def\iconsize{\scriptsize}
+    \setstretch{0.9}
+}{
+    \RequirePackage[sfdefault,lf,scale=1.1]{carlito}
+    \def\iconsize{\scriptsize}
+    \setstretch{1.0}
+}
 
 \definecolor{accentcolor}{HTML}{1E738D}
 \definecolor{fillcolor}{HTML}{F9F3DF}
@@ -195,7 +191,7 @@
 % Containers for layout components and panes
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewTColorBox[]{containerbox}{o o}{
+\NewTColorBox[]{@llresume@containerbox}{o o}{
     boxsep=0cm,
     boxrule=0cm,
     sharp corners,
@@ -211,7 +207,7 @@
     IfValueT={#2}{equal height group=#2},
 }
 
-\NewTColorBox[]{coloredbox}{m o o}{
+\NewTColorBox[]{@llresume@coloredbox}{m o o}{
     boxsep=0cm,
     boxrule=0cm,
     sharp corners,
@@ -228,7 +224,7 @@
     IfValueF={#2}{oversize},
 }
 
-\NewTColorBox[]{sectitlebox}{o}{
+\NewTColorBox[]{@llresume@sectitlebox}{o}{
     boxsep=0cm,
     boxrule=\boxlinewidth,
     IfValueTF={#1}{sharp corners=west}{sharp corners=east},
@@ -248,7 +244,7 @@
     colback=fillcolor,
 }
 
-\NewTColorBox[]{tagbox}{}{
+\NewTColorBox[]{@llresume@tagbox}{}{
     boxsep=0cm,
     boxrule=\boxlinewidth,
     arc=\boxarc,
@@ -265,7 +261,7 @@
     colback=bgcolor,
 }
 
-\NewTColorBox[]{labelbox}{}{
+\NewTColorBox[]{@llresume@labelbox}{}{
     boxsep=0cm,
     boxrule=\boxlinewidth,
     arc=6.5pt,
@@ -283,67 +279,83 @@
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Abstract components
+% Required user definitions
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewDocumentCommand{\@entryAbstract}{o +m}{%
+\NewDocumentCommand{\name}{m m o}{%
+    \newcommand{\@llresume@firstname}{#1}
+    \newcommand{\@llresume@lastname}{#2}
+    \IfValueT{#3}{\newcommand{\@llresume@pronouns}{#3}}
+}
+
+\NewDocumentCommand{\photo}{m}{%
+    \newcommand{\@llresume@photo}{#1}
+}
+
+\NewDocumentCommand{\personalinfo}{+m}{%
+    \newcommand{\@llresume@personalinfo}{#1}
+}
+
+\NewDocumentCommand{\tagline}{+m}{%
+    \newcommand{\@llresume@tagline}{#1}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Base components
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\NewDocumentCommand{\@llresume@baseentry}{o +m}{%
     \vskip\mainentrymargin%
     \IfValueT{#1}{{\bfseries#1}\par}%
     #2%
     \par%
 }
 
-\NewDocumentCommand{\@infoAbstract}{+m o}{%
+\NewDocumentCommand{\@llresume@baseinfo}{+m o}{%
     \mbox{\IfValueTF{#2}{\href{#2}{#1}}{#1}}%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Basic components
+% Main components
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewDocumentEnvironment{mainsection}{m}
-    {%
-        \begin{containerbox}%
-        \vspace{\mainsectionmargin}%
-        \docolaction%
-            {\setboolean{@rightalign}{true}\raggedleft}%
-            {}%
-            {\setboolean{@rightalign}{false}\raggedright}%
-        \def\@sectitle{{\bfseries\color{headingcolor}\MakeUppercase{#1}\par}}%
-        \ifthenelse{\boolean{@rightalign}}%
-            {\begin{sectitlebox}[right]\@sectitle\end{sectitlebox}}%
-            {\begin{sectitlebox}\@sectitle\end{sectitlebox}}%
-        \par%
-    }
-    {%
-        \vspace{\mainsectionmargin}%
-        \end{containerbox}%
-    }
+\NewDocumentEnvironment{mainsection}{m}{%
+    \begin{@llresume@containerbox}%
+    \vspace{\mainsectionmargin}%
+    \docolaction%
+        {\setbool{@llresume@rightalign}{true}\raggedleft}%
+        {}%
+        {\setbool{@llresume@rightalign}{false}\raggedright}%
+    \def\@sectitle{{\bfseries\color{headingcolor}\MakeUppercase{#1}\par}}%
+    \ifbool{@llresume@rightalign}%
+        {\begin{@llresume@sectitlebox}[right]\@sectitle\end{@llresume@sectitlebox}}%
+        {\begin{@llresume@sectitlebox}\@sectitle\end{@llresume@sectitlebox}}%
+    \par%
+}{%
+    \vspace{\mainsectionmargin}%
+    \end{@llresume@containerbox}%
+}
 
 \NewDocumentCommand{\infoGeneric}{m m o}{%
     \def\@infoline{#2}%
     \def\@infomargin{\hspace{\infoiconmargin}}%
     \def\@infoicon{\makebox[\infoiconboxwidth]{\iconsize\color{accentcolor}#1}}%
-    \@infoAbstract%
-        {%
-            \ifthenelse{\boolean{@rightalign}}%
-                {\@infoline\@infomargin\@infoicon}%
-                {\@infoicon\@infomargin\@infoline}%
-        }%
-        [#3]%
+    \@llresume@baseinfo{%
+        \ifbool{@llresume@rightalign}%
+            {\@infoline\@infomargin\@infoicon}%
+            {\@infoicon\@infomargin\@infoline}%
+    }[#3]%
     \par%
 }
 
 \NewDocumentCommand{\entryGeneric}{m +o o o o}{%
-    \@entryAbstract%
-        [#1]%
-        {%
-            \vskip\mainentrycomponentsmargin%
-            \IfValueT{#2}{#2\par}%
-            \IfValueT{#3}{{\color{accentcolor}#3}\par}%
-            \IfValueT{#4}{{\color{accentcolor}#4}\par}%
-            \IfValueT{#5}{{\color{accentcolor}#5}\par}%
-        }%
+    \@llresume@baseentry[#1]{%
+        \vskip\mainentrycomponentsmargin%
+        \IfValueT{#2}{#2\par}%
+        \IfValueT{#3}{{\color{accentcolor}#3}\par}%
+        \IfValueT{#4}{{\color{accentcolor}#4}\par}%
+        \IfValueT{#5}{{\color{accentcolor}#5}\par}%
+    }%
 }
 
 \NewDocumentCommand{\entryJob}{m +o m m}{%
@@ -355,14 +367,14 @@
 }
 
 \NewDocumentCommand{\entrySkills}{o +m}{%
-    \@entryAbstract[#1]{%
+    \@llresume@baseentry[#1]{%
         \vskip\skillgroupmargin%
         #2%
     }%
 }
 
 \NewDocumentCommand{\entryTags}{o +m}{%
-    \@entryAbstract[#1]{%
+    \@llresume@baseentry[#1]{%
         % Add some line spacing to make multiple lines of tags look nicer, but
         % add some negative space in the beginning to remove line spacing on the
         % first line of tags
@@ -386,50 +398,46 @@
             }%
         }%
     }%
-    \@infoAbstract%
-        {%
-            \parbox[t]{\dimexpr 0.495\linewidth}{%
-                \ifthenelse{\boolean{@rightalign}}%
-                    {\raggedleft\@skillname\@skillmargin\@skilldots}%
-                    {\raggedright\@skilldots\@skillmargin\@skillname}%
-            }%
+    \@llresume@baseinfo{%
+        \parbox[t]{\dimexpr 0.495\linewidth}{%
+            \ifbool{@llresume@rightalign}%
+                {\raggedleft\@skillname\@skillmargin\@skilldots}%
+                {\raggedright\@skilldots\@skillmargin\@skillname}%
         }%
+    }%
 }
 
 \NewDocumentCommand{\simpleskill}{o m}{%
-    \@infoAbstract%
-        {%
-            \makebox[\infoiconboxwidth]{%
-                \iconsize%
-                \color{accentcolor}%
-                \IfValueTF{#1}{#1}{\faDotCircle}%
-            }%
-            ~#2%
-            \enspace%
+    \@llresume@baseinfo{%
+        \makebox[\infoiconboxwidth]{%
+            \iconsize%
+            \color{accentcolor}%
+            \IfValueTF{#1}{#1}{\faDotCircle}%
         }%
+        ~#2%
+        \enspace%
+    }%
 }
 
 \NewDocumentCommand{\boxedtag}{o m}{%
-    \@infoAbstract%
-        {%
-            \begin{tagbox}%
-                \makebox[\infoiconboxwidth]{%
-                    \iconsize%
-                    \color{accentcolor}%
-                    \IfValueTF{#1}{#1}{\faTag}%
-                }%
-                ~#2%
-            \end{tagbox}%
-        }%
+    \@llresume@baseinfo{%
+        \begin{@llresume@tagbox}%
+            \makebox[\infoiconboxwidth]{%
+                \iconsize%
+                \color{accentcolor}%
+                \IfValueTF{#1}{#1}{\faTag}%
+            }%
+            ~#2%
+        \end{@llresume@tagbox}%
+    }%
 }
 
 \NewDocumentCommand{\boxedlabel}{m}{%
-    \@infoAbstract%
-        {%
-            \begin{labelbox}%
-                {\footnotesize\color{accentcolor}#1}%
-            \end{labelbox}%
-        }%
+    \@llresume@baseinfo{%
+        \begin{@llresume@labelbox}%
+            {\footnotesize\color{accentcolor}#1}%
+        \end{@llresume@labelbox}%
+    }%
 }
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -454,32 +462,10 @@
 \NewDocumentCommand{\infoYoutube}{m o}{\infoGeneric{\faYoutube}{#1}[#2]}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Required user definitions
+% Header and document end
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\NewDocumentCommand{\name}{m m o}{%
-    \def\@firstname{#1}
-    \def\@lastname{#2}
-    \IfValueT{#3}{\def\@pronouns{#3}}
-}
-
-\NewDocumentCommand{\photo}{m}{%
-    \def\@photo{#1}
-}
-
-\NewDocumentCommand{\personalinfo}{+m}{%
-    \def\@personalinfo{#1}
-}
-
-\NewDocumentCommand{\tagline}{+m}{%
-    \def\@tagline{#1}
-}
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Layout panes
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-\NewDocumentCommand{\makeheader}{}{%
+\AfterPreamble{%
     \def\@photoinnersize{\dimexpr \photosize-2\graphiclinewidth}%
     \def\@columnwidth{\dimexpr 0.5\linewidth-\columnmargin}%
     \def\@photocomponent{%
@@ -500,7 +486,7 @@
                 bgcolor,
                 path picture={
                     \node at (path picture bounding box.center){
-                        \includegraphics[width=\@photoinnersize]{\@photo}
+                        \includegraphics[width=\@photoinnersize]{\@llresume@photo}
                     };
                 }
             ] {};
@@ -510,52 +496,52 @@
         \setstretch{1.375}%
         \raggedright%
         \color{headingcolor}%
-        {\LARGE\bfseries\@firstname}%
+        {\LARGE\bfseries\@llresume@firstname}%
         \par%
-        {\LARGE\bfseries\MakeUppercase{\@lastname}}%
+        {\LARGE\bfseries\MakeUppercase{\@llresume@lastname}}%
         \par%
-        {\Large(\@pronouns)}%
+        {\Large(\@llresume@pronouns)}%
     }%
     \def\@personalinfocomponent{%
         \raggedright%
-        \setboolean{@rightalign}{false}%
-        \@personalinfo%
+        \setbool{@llresume@rightalign}{false}%
+        \@llresume@personalinfo%
     }%
-    \begin{containerbox}[\@columnwidth][headergroup]%
+    \begin{@llresume@containerbox}[\@columnwidth][headergroup]%
         \def\@photoboxwidth{\dimexpr \photosize+\columnmargin}%
         \def\@nameboxwidth{\dimexpr \linewidth-\photosize-\columnmargin}%
-        \begin{containerbox}[\@photoboxwidth][photogroup]%
+        \begin{@llresume@containerbox}[\@photoboxwidth][photogroup]%
             \@photocomponent%
-        \end{containerbox}%
-        \begin{containerbox}[\@nameboxwidth][photogroup]%
+        \end{@llresume@containerbox}%
+        \begin{@llresume@containerbox}[\@nameboxwidth][photogroup]%
             \@namecomponent%
-        \end{containerbox}%
-    \end{containerbox}%
+        \end{@llresume@containerbox}%
+    \end{@llresume@containerbox}%
     \hfill%
-    \begin{containerbox}[\@columnwidth][headergroup]%
+    \begin{@llresume@containerbox}[\@columnwidth][headergroup]%
         \@personalinfocomponent%
-    \end{containerbox}%
+    \end{@llresume@containerbox}%
     \par%
     \vskip\panemargin%
-    \begin{coloredbox}{fillcolor}%
+    \begin{@llresume@coloredbox}{fillcolor}%
         \raggedright%
-        \@tagline%
-    \end{coloredbox}%
+        \@llresume@tagline%
+    \end{@llresume@coloredbox}%
 }
 
-\newenvironment{mainpane}
-    {%
-        \vskip\panemargin%
-        \begin{multicols}{2}
-            % Column separator
-            \SetMCRule{
-                color=accentcolor,
-                line-style=solid-circles,
-                width=\graphiclinewidth,
-            }
-            % Do not fill up vertical space
-            \raggedcolumns%
-    }
-    {%
-        \end{multicols}
-    }
+\AfterPreamble{%
+    \vskip\panemargin%
+    \begin{multicols}{2}
+        % Column separator
+        \SetMCRule{
+            color=accentcolor,
+            line-style=solid-circles,
+            width=\graphiclinewidth,
+        }
+        % Do not fill up vertical space
+        \raggedcolumns%
+}
+
+\AtEndDocument{%
+    \end{multicols}
+}
