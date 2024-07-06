@@ -499,8 +499,10 @@
         {\LARGE\bfseries\@llresume@firstname}%
         \par%
         {\LARGE\bfseries\MakeUppercase{\@llresume@lastname}}%
+        \ifdefined\@llresume@pronouns%
         \par%
         {\Large(\@llresume@pronouns)}%
+        \fi%
     }%
     \def\@personalinfocomponent{%
         \raggedright%
