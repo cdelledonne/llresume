@@ -3,12 +3,12 @@
 %
 % Description: Lean LaTeX resume class
 % Maintainer:  Carlo Delle Donne <https://github.com/cdelledonne>
-% Version:     0.2.0
+% Version:     0.2.1
 % License:     MIT
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{llresume}[2022/10/05 v0.2.0 Lean LaTeX resume class]
+\ProvidesClass{llresume}[2022/10/05 v0.2.1 Lean LaTeX resume class]
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Class options and base class
